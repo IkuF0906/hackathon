@@ -1,9 +1,13 @@
 package handler
 
-func cardHandler() { //カード処理
+import (
+	"github.com/gin-gonic/gin"
+)
+
+func CardHandler(c *gin.Context) { //カード処理
 
 }
 
-func deleteCard() { //カード削除
+func DeleteCard(c *gin.Context) { //カード削除
 
 }

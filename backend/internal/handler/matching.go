@@ -1,5 +1,9 @@
 package handler
 
-func matchingHandler() { //マッチング処理
+import (
+	"github.com/gin-gonic/gin"
+)
+
+func MatchingHandler(c *gin.Context) { //マッチング処理
 
 }

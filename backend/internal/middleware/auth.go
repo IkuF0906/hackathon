@@ -29,8 +29,8 @@ func Auth() gin.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		userID := int(claims["id"].(float64))
-		c.Set("userID", userID) // ハンドラで使えるようにセットする
+		userID := claims["id"].(string)
+		c.Set("userID", userID)
 		c.Next()
 	}
 }

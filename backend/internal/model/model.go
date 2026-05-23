@@ -1,19 +1,21 @@
 package model
 
 type User struct {
-	ID       int    `json:"id"`
+	ID       string `json:"user_id"`
 	Name     string `json:"name"`
 	Mail     string `json:"mail"`
-	Password string `json:"password"`
+	Password string `json:"-"` //レスポンスにパスワード情報を含めるべきではない
 	Birthday string `json:"birthday"`
 }
 
 type Attribute struct {
-	Attribute string
-	UserID    int
+	ID        int    `json:"id"`
+	UserID    string `json:"user_id"`
+	Attribute string `json:"attribute"`
 }
 
 type Card struct {
-	CardID int
-	UserID int
+	CardID  string `json:"card_id"`
+	UserID  string `json:"user_id"`
+	Content string `json:"content"`
 }
