@@ -4,8 +4,6 @@ import (
 	"backend/internal/handler"
 	"backend/internal/middleware"
 	"backend/internal/repository"
-	"fmt"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -13,10 +11,6 @@ import (
 
 func main() {
 	godotenv.Load("../../config/.env")
-
-	// デバッグ用（確認したら消す）
-	fmt.Println("DB_HOST:", os.Getenv("DB_HOST"))
-	fmt.Println("DB_PORT:", os.Getenv("DB_PORT"))
 
 	repository.InitDB() //DB接続
 
