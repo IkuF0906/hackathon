@@ -1,3 +1,4 @@
+-- Active: 1779035263776@@127.0.0.1@5432@asatomo
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE users (

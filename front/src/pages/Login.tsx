@@ -27,7 +27,9 @@ function Login() {
       });
 
       const data: {
-        token?: string;
+        user_id?: string;
+        access_token?: string;
+        refresh_token?: string;
         error?: string;
       } = await response.json();
 
@@ -35,11 +37,13 @@ function Login() {
         throw new Error(data.error || "ログインに失敗しました");
       }
 
-      if (!data.token) {
+      if (!data.access_token) {
         throw new Error("トークンが返されませんでした");
       }
 
-      localStorage.setItem("token", data.token);
+      //HTTPCookieに保存するのも検討
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token || "");
 
       navigate("/home", { replace: true });
     } catch (error) {

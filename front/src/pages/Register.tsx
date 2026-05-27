@@ -12,7 +12,6 @@ function Register() {
   const [password, setPassword] = useState<string>("");
   const [birthday, setBirthday] = useState<string>("");
   const [attributes, setAttributes] = useState<string[]>([]);
-
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleAttributeChange = (attribute: string): void => {
@@ -44,15 +43,25 @@ function Register() {
       });
 
       const data: {
-        message?: string;
+        user_id?: string;
+        access_token?: string;
+        refresh_token?: string;
         error?: string;
       } = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "会員登録に失敗しました");
+        throw new Error(data.error || "ログインに失敗しました");
       }
 
-      navigate("/login", { replace: true });
+      if (!data.access_token) {
+        throw new Error("トークンが返されませんでした");
+      }
+
+      //HTTPCookieに保存するのも検討
+      localStorage.setItem("access_token", data.access_token);
+      localStorage.setItem("refresh_token", data.refresh_token || "");
+
+      navigate("/home", { replace: true }); 
     } catch (error) {
       setErrorMessage("会員登録に失敗しました。入力内容を確認してください。");
     }
@@ -150,8 +159,8 @@ function Register() {
               </div>
               <div className="attribute-options">
                 <label className="attribute-option">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     value="映画"
                     checked={attributes.includes("映画")}
                     onChange={() => handleAttributeChange("映画")}
@@ -163,8 +172,8 @@ function Register() {
                 </label>
 
                 <label className="attribute-option">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     value="音楽"
                     checked={attributes.includes("音楽")}
                     onChange={() => handleAttributeChange("音楽")}
@@ -176,8 +185,8 @@ function Register() {
                 </label>
 
                 <label className="attribute-option">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     value="ゲーム"
                     checked={attributes.includes("ゲーム")}
                     onChange={() => handleAttributeChange("ゲーム")}
@@ -191,7 +200,7 @@ function Register() {
 
               <button className="login-button" type="submit" onClick={handleRegister}>登録する</button>
             </div>
-            
+
             {errorMessage && <div className="signup-area signup-error">{errorMessage}</div>}
 
             <div className="signup-area">
