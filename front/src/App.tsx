@@ -57,7 +57,7 @@ function App() {
       />
 
       <Route
-        path="/room"
+        path="/room/:room_id"
         element={
           // <RequireAuth>
             <Room />
