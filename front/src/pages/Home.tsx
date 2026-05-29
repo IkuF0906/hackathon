@@ -8,7 +8,7 @@ function Home() {
 
       <Header
         actions={[
-          { text: "ログアウト", to: "/logout"},
+          { text: "ログアウト", to: "/logout" },
         ]}
       />
 
@@ -17,7 +17,7 @@ function Home() {
         <section className="left-column">
           <div className="main-copy">
             <h1>
-              今日の<span className="accent">5分</span>を、<br/>
+              今日の<span className="accent">5分</span>を、<br />
               誰かとの会話に。
             </h1>
 
@@ -64,8 +64,8 @@ function Home() {
 
               <div className="matching-main">
                 <h2 className="matching-title">
-                  今すぐ<br/>
-                  マッチングを<br/>
+                  今すぐ<br />
+                  マッチングを<br />
                   始める
                 </h2>
 

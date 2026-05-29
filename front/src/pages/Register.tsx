@@ -28,6 +28,16 @@ function Register() {
     try {
       setErrorMessage("");
 
+      if (attributes.length === 0) {
+        setErrorMessage("属性を1つ以上選択してください。");
+        return;
+      }
+      
+      if (!birthday) {
+        setErrorMessage("誕生日を入力してください。");
+        return;
+      }
+      
       const response = await fetch("http://localhost:8080/auth/register", {
         method: "POST",
         headers: {
@@ -61,7 +71,7 @@ function Register() {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token || "");
 
-      navigate("/home", { replace: true }); 
+      navigate("/home", { replace: true });
     } catch (error) {
       setErrorMessage("会員登録に失敗しました。入力内容を確認してください。");
     }
