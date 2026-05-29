@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -83,19 +84,30 @@ func SignUp(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	var input model.User
+
+	var input struct {
+		Mail     string `json:"mail"`
+		Password string `json:"password"`
+	}
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "入力値が不正です"})
 		return
 	}
 
+	fmt.Println("input.Mail:", input.Mail)         // 追加
+	fmt.Println("input.Password:", input.Password) // 追加
+
 	user, err := repository.GetUserByMail(input.Mail)
 	if err != nil {
+		fmt.Println("GetUserByMail error:", err) // 追加
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "メールアドレスまたはパスワードが不正です"})
 		return
 	}
 
+	fmt.Println("user.Password:", user.Password) // 追加
+
 	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(input.Password)); err != nil {
+		fmt.Println("bcrypt error:", err) // 追加
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "メールアドレスまたはパスワードが不正です"})
 		return
 	}
