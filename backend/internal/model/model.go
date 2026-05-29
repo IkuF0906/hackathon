@@ -27,6 +27,7 @@ type Room struct {
 }
 
 type Message struct {
+	UserName  string `json:"user_name"`
 	MessageID string `json:"message_id"`
 	RoomID    string `json:"room_id"`
 	UserID    string `json:"user_id"`
