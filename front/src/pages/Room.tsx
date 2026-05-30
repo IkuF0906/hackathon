@@ -149,6 +149,64 @@ function Room() {
   const progressOffset = progressRatio * CLOCK_TOTAL_LENGTH;
   const timerText = formatTime(timeLeft);
 
+  // 会話相手の名前を取得
+  type ProfileData = {
+    user_id: string;
+    mail: string;
+    name: string;
+    birthday: string;
+    attributes: string[];
+  };
+  type ApiErrorResponse = {
+    error?: string;
+  };
+  async function readErrorMessage(response: Response): Promise<string> {
+    try {
+      const data: ApiErrorResponse = await response.json();
+      return data.error || "エラーが発生しました";
+    } catch {
+      return "エラーが発生しました";
+    }
+  }
+  const API_BASE_URL = "http://localhost:8080/";
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access_token");
+
+      try {
+        if (!token) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}users/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem("access_token");
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        if (!response.ok) {
+          const message = await readErrorMessage(response);
+          throw new Error(message);
+        }
+
+        const data: ProfileData = await response.json();
+        setProfile(data);
+      } catch (error) {
+        
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
   return (
     <div className="room-page-root">
       <div className="morning-timer-wrap">
@@ -166,7 +224,7 @@ function Room() {
           <circle className="clock-node" cx="75" cy="79" r="0.8" />
           <circle className="clock-node" cx="25" cy="79" r="0.8" />
           <circle className="clock-node" cx="10" cy="37" r="0.8" />
-          <text className="clock-label" x="50" y="15">MORN.</text>
+          <text className="clock-label" x="50" y="15">0</text>
           <text className="clock-label" x="84" y="41">1</text>
           <text className="clock-label" x="71" y="74">2</text>
           <text className="clock-label" x="29" y="74">3</text>
@@ -177,7 +235,7 @@ function Room() {
       <div className="chat-window">
         <header className="chat-header">
           <div className="morning-title">
-            <span>相手ユーザー</span>
+            <span>{profile?profile.name:"相手ユーザー"}</span>
           </div>
           <div className={`morning-counter ${timeLeft <= 0 ? "morning-counter-finished" : ""}`}>
             {timerText}
@@ -198,9 +256,9 @@ function Room() {
             }
             return (
               <div key={message.id} className={`msg-bubble ${message.type}`}>
-                {message.type === "received" && (
+                {/*message.type === "received" && (
                   <div className="msg-name">{message.user_name}</div>
-                )}
+                )*/}
                 <div className="msg-text">{message.content}</div>
                 {message.time && <div className="msg-meta">{message.time}</div>}
               </div>

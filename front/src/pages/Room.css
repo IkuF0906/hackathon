@@ -117,14 +117,13 @@
   align-items: center;
   gap: 8px;
   min-width: 0;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--sky-blue);
   letter-spacing: 0.5px;
 }
 
 .morning-title span {
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

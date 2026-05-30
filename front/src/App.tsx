@@ -28,67 +28,66 @@ function App() {
       <Route path="/logout" element={<Logout />} />
 
       {/* ログイン後に使うページ */}
-      {/* 動作確認のためRequireAuth解除中 */}
       <Route
         path="/home"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <Home />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/profile"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <Profile />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/matching"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <Matching />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/room/:room_id"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <Room />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/room/card"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <RoomCard />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/card"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <Card />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
       <Route
         path="/profile/card"
         element={
-          // <RequireAuth>
+          <RequireAuth>
             <ProfileCard />
-          // </RequireAuth>
+          </RequireAuth>
         }
       />
 
