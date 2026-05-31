@@ -15,11 +15,18 @@ type HeaderProps = {
 function Header({ title = "朝とも（Asa-Tomo）", actions = [] }: HeaderProps) {
   return (
     <header className="site-header">
-      <Link className="brand" to="/">
-        <div className="brand-mark"></div>
-        <span>{title}</span>
-      </Link>
-
+      {actions.length > 0 ? (
+        <Link className="brand" to="/home">
+          <div className="brand-mark"></div>
+          <span>{title}</span>
+        </Link>
+      ) : (
+        <div className="brand">
+          <div className="brand-mark"></div>
+          <span>{title}</span>
+        </div>
+      )}
+      
       {actions.length > 0 && (
         <div className="header-actions">
           {actions.map((action) => (

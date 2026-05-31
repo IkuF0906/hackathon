@@ -5,7 +5,7 @@ function Logout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("access_token");
 
     navigate("/login", { replace: true });
   }, [navigate]);

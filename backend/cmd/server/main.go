@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load("C:/Project/hackathon/backend/.env"); err != nil {
+	if err := godotenv.Load("C:/Users/okzks/Documents/dev/hackathon/backend/.env"); err != nil {
 		fmt.Println("envの読み込みエラー:", err)
 	}
 	fmt.Println("DB_HOST:", os.Getenv("DB_HOST"))

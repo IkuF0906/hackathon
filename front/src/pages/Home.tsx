@@ -1,8 +1,86 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
 import "./Home.css";
 import Header from "../components/Header";
 
+type ProfileData = {
+  user_id: string;
+  mail: string;
+  name: string;
+  birthday: string;
+  attributes: string[];
+};
+
+type ApiErrorResponse = {
+  error?: string;
+};
+
+function getInitial(name: string): string {
+  if (!name) {
+    return "U";
+  }
+
+  return name.slice(0, 1).toUpperCase();
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const data: ApiErrorResponse = await response.json();
+    return data.error || "エラーが発生しました";
+  } catch {
+    return "エラーが発生しました";
+  }
+}
+
 function Home() {
+  const API_BASE_URL = "http://localhost:8080/";
+  const navigate = useNavigate();
+
+  const [profile, setProfile] = useState<ProfileData | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access_token");
+
+      try {
+        if (!token) {
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}users/me`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem("access_token");
+          navigate("/login", { replace: true });
+          return;
+        }
+
+        if (!response.ok) {
+          const message = await readErrorMessage(response);
+          throw new Error(message);
+        }
+
+        const data: ProfileData = await response.json();
+        setProfile(data);
+      } catch (error) {
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : "プロフィールの取得に失敗しました"
+        );
+      }
+    };
+
+    fetchProfile();
+  }, [navigate]);
+
   return (
     <div className="page">
 
@@ -27,21 +105,29 @@ function Home() {
           </div>
 
           <section className="profile-summary">
-            <div className="profile-content">
-              <div className="profile-header">
-                <div className="avatar">U</div>
-                <div>
-                  <div className="profile-name">ユーザーさん</div>
-                  <div className="profile-mail">example@email.com</div>
+            {profile&&(
+              <div className="profile-content">
+                <div className="profile-header">
+                  <div className="avatar">{getInitial(profile.name)}</div>
+                  <div>
+                    <div className="profile-name">{profile.name}</div>
+                    <div className="profile-mail">{profile.mail}</div>
+                  </div>
+                </div>
+
+                <div className="tag-list">
+                  {profile.attributes.length > 0 ? (
+                    profile.attributes.map((attribute) => (
+                      <span className="tag" key={attribute}>
+                        {attribute}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="info-value">未設定</span>
+                  )}
                 </div>
               </div>
-
-              <div className="tag-list">
-                <span className="tag">映画</span>
-                <span className="tag">音楽</span>
-                <span className="tag">ゲーム</span>
-              </div>
-            </div>
+            )}
 
             <div className="sub-actions">
               <Link className="sub-button" to="/profile">
@@ -65,8 +151,7 @@ function Home() {
               <div className="matching-main">
                 <h2 className="matching-title">
                   今すぐ<br />
-                  マッチングを<br />
-                  始める
+                  マッチングを始める
                 </h2>
 
                 <p className="matching-text">
