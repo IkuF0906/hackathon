@@ -11,9 +11,6 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Matching from "./pages/Matching";
 import Room from "./pages/Room";
-import RoomCard from "./pages/RoomCard";
-import Card from "./pages/Card";
-import ProfileCard from "./pages/ProfileCard";
 import RequireAuth from "./components/RequireAuth";
 
 function App() {
@@ -60,33 +57,6 @@ function App() {
         element={
           <RequireAuth>
             <Room />
-          </RequireAuth>
-        }
-      />
-
-      <Route
-        path="/room/card"
-        element={
-          <RequireAuth>
-            <RoomCard />
-          </RequireAuth>
-        }
-      />
-
-      <Route
-        path="/card"
-        element={
-          <RequireAuth>
-            <Card />
-          </RequireAuth>
-        }
-      />
-
-      <Route
-        path="/profile/card"
-        element={
-          <RequireAuth>
-            <ProfileCard />
           </RequireAuth>
         }
       />

@@ -131,10 +131,7 @@ function Home() {
 
             <div className="sub-actions">
               <Link className="sub-button" to="/profile">
-                プロフィール
-              </Link>
-              <Link className="sub-button" to="/profile/card">
-                カードを見る
+                プロフィール確認・編集
               </Link>
             </div>
           </section>

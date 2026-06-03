@@ -16,7 +16,7 @@ type ApiErrorResponse = {
 };
 
 const API_BASE_URL = "http://localhost:8080/";
-const ATTRIBUTE_OPTIONS = ["映画", "音楽", "ゲーム"];
+const ATTRIBUTE_OPTIONS = ["勉強中", "出勤中", "通学中", "早起きが苦手", "眠い"];
 
 function getBirthdayForDateInput(birthday: string): string {
   if (!birthday) {
@@ -275,14 +275,13 @@ function Profile() {
               <h2 className="edit-title">プロフィール編集</h2>
               <p className="edit-description">
                 名前と属性を編集できます。
-                メールアドレスと誕生日は現在表示のみです。
               </p>
             </div>
 
             <div className="profile-form">
               <div className="form-group">
                 <label className="form-label" htmlFor="mail">
-                  メールアドレス
+                  メールアドレス（変更不可）
                 </label>
                 <div className="input-wrap">
                   <span className="input-icon">✉</span>
@@ -292,8 +291,7 @@ function Profile() {
                     id="mail"
                     name="mail"
                     value={mail}
-                    onChange={(event) => setMail(event.target.value)}
-                    required
+                    readOnly
                   />
                 </div>
               </div>
@@ -319,7 +317,7 @@ function Profile() {
 
                 <div className="form-group">
                   <label className="form-label" htmlFor="birthday">
-                    誕生日
+                    誕生日（変更不可）
                   </label>
                   <div className="input-wrap">
                     <span className="input-icon">日</span>
@@ -329,8 +327,7 @@ function Profile() {
                       id="birthday"
                       name="birthday"
                       value={birthday}
-                      onChange={(event) => setBirthday(event.target.value)}
-                      required
+                      readOnly
                     />
                   </div>
                 </div>
@@ -340,7 +337,7 @@ function Profile() {
                 <div>
                   <div className="form-label">属性</div>
                   <p className="attribute-help">
-                    興味のあるものを複数選択できます。
+                    自分に合うものを複数選択できます。
                   </p>
                 </div>
 
