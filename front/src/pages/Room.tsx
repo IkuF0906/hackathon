@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useLocation, Link } from "react-router";
 import "./Room.css";
 
 type ChatMessage = {
@@ -20,6 +20,11 @@ type WsMessage = {
   created_at: string;
 };
 
+type RoomState = {
+  name_1: string;
+  name_2: string;
+};
+
 const MINUTES_LIMIT = 5;
 const INITIAL_TIME_LEFT = MINUTES_LIMIT * 60;
 const CLOCK_TOTAL_LENGTH = 264;
@@ -30,7 +35,7 @@ const initialMessages: ChatMessage[] = [
     type: "system",
     user_id: "",
     user_name: "",
-    content: "5分間のチャットが始まります。",
+    content: "5分間の会話が始まります。",
   },
 ];
 
@@ -63,6 +68,9 @@ function Room() {
   const chatScrollerRef = useRef<HTMLDivElement | null>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
+  const [isMatchModalOpen, setIsMatchModalOpen] = useState<boolean>(true);
+  const [leaveModalOpen, setLeaveModalOpen] = useState<string>("");
+
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
     if (!access_token) {
@@ -80,8 +88,12 @@ function Room() {
       const data: WsMessage = JSON.parse(e.data);
 
       if (data.type === "left") {
-        alert("相手が退出しました");
-        navigate("/home");
+        setLeaveModalOpen((prev) => {
+          if (prev !== "") {
+            return prev;
+          }
+          return "相手ユーザーが退出しました";
+        });
         return;
       }
 
@@ -109,7 +121,12 @@ function Room() {
       setTimeLeft((prevTimeLeft) => {
         if (prevTimeLeft <= 1) {
           window.clearInterval(timerId);
-          navigate("/home");
+          setLeaveModalOpen((prev) => {
+            if (prev !== "") {
+              return prev;
+            }
+            return "5分経過しました！";
+          });
           return 0;
         }
         return prevTimeLeft - 1;
@@ -142,6 +159,10 @@ function Room() {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       wsRef.current.close();
     }
+    setLeaveModalOpen("退出ボタンをクリックしました");
+  };
+
+  const handleGoHome = () => {
     navigate("/home");
   };
 
@@ -207,6 +228,18 @@ function Room() {
 
     fetchProfile();
   }, [navigate]);
+
+  const location = useLocation();
+  const state = location.state as RoomState | null;
+  const name_1 = state?.name_1;
+  const name_2 = state?.name_2;
+  let peerName="相手ユーザー"; 
+
+  if(profile&&name_1&&name_2){
+    if(profile.name==name_1) peerName=name_2+" さん";
+    else peerName=name_1+" さん";
+  }
+
   return (
     <div className="room-page-root">
       <div className="morning-timer-wrap">
@@ -235,7 +268,7 @@ function Room() {
       <div className="chat-window">
         <header className="chat-header">
           <div className="morning-title">
-            <span>{profile?profile.name:"相手ユーザー"}</span>
+            <span>{peerName}</span>
           </div>
           <div className={`morning-counter ${timeLeft <= 0 ? "morning-counter-finished" : ""}`}>
             {timerText}
@@ -266,6 +299,50 @@ function Room() {
           })}
           <div ref={chatScrollerRef} />
         </main>
+
+        {isMatchModalOpen && (
+          <div className="match-modal-overlay">
+            <div className="match-modal" role="dialog" aria-modal="true">
+              <h2 className="match-modal-title">
+                {peerName}とマッチングしました！
+              </h2>
+
+              <p className="match-modal-text">
+                5分間の会話が始まります。
+              </p>
+
+              <button
+                className="match-modal-button"
+                type="button"
+                onClick={() => setIsMatchModalOpen(false)}
+              >
+                会話を開始する
+              </button>
+            </div>
+          </div>
+        )}
+
+        {leaveModalOpen != "" && (
+          <div className="match-modal-overlay">
+            <div className="match-modal" role="dialog" aria-modal="true">
+              <h2 className="match-modal-title">
+                {leaveModalOpen}
+              </h2>
+
+              <p className="match-modal-text">
+                会話が終了しました。
+              </p>
+
+              <button
+                className="match-modal-button"
+                type="button"
+                onClick={handleGoHome}
+              >
+                ホームに戻る
+              </button>
+            </div>
+          </div>
+        )}
 
         <footer className="chat-footer">
           <input
