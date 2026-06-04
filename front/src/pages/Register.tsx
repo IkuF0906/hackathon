@@ -165,45 +165,71 @@ function Register() {
 
               <div>
                 <div className="form-label">属性</div>
-                <p className="attribute-help">興味のあるものを選択してください。（複数選択可）</p>
+                <p className="attribute-help">自分に合うものを選択してください。（複数選択可）</p>
               </div>
               <div className="attribute-options">
                 <label className="attribute-option">
                   <input
                     type="checkbox"
-                    value="映画"
-                    checked={attributes.includes("映画")}
-                    onChange={() => handleAttributeChange("映画")}
+                    value="勉強中"
+                    checked={attributes.includes("勉強中")}
+                    onChange={() => handleAttributeChange("勉強中")}
                   />
                   <span className="attribute-chip">
                     <span className="check-mark">✓</span>
-                    映画
+                    勉強中
                   </span>
                 </label>
 
                 <label className="attribute-option">
                   <input
                     type="checkbox"
-                    value="音楽"
-                    checked={attributes.includes("音楽")}
-                    onChange={() => handleAttributeChange("音楽")}
+                    value="出勤中"
+                    checked={attributes.includes("出勤中")}
+                    onChange={() => handleAttributeChange("出勤中")}
                   />
                   <span className="attribute-chip">
                     <span className="check-mark">✓</span>
-                    音楽
+                    出勤中
                   </span>
                 </label>
 
                 <label className="attribute-option">
                   <input
                     type="checkbox"
-                    value="ゲーム"
-                    checked={attributes.includes("ゲーム")}
-                    onChange={() => handleAttributeChange("ゲーム")}
+                    value="通学中"
+                    checked={attributes.includes("通学中")}
+                    onChange={() => handleAttributeChange("通学中")}
                   />
                   <span className="attribute-chip">
                     <span className="check-mark">✓</span>
-                    ゲーム
+                    通学中
+                  </span>
+                </label>
+
+                <label className="attribute-option">
+                  <input
+                    type="checkbox"
+                    value="早起きが苦手"
+                    checked={attributes.includes("早起きが苦手")}
+                    onChange={() => handleAttributeChange("早起きが苦手")}
+                  />
+                  <span className="attribute-chip">
+                    <span className="check-mark">✓</span>
+                    早起きが苦手
+                  </span>
+                </label>
+
+                <label className="attribute-option">
+                  <input
+                    type="checkbox"
+                    value="眠い"
+                    checked={attributes.includes("眠い")}
+                    onChange={() => handleAttributeChange("眠い")}
+                  />
+                  <span className="attribute-chip">
+                    <span className="check-mark">✓</span>
+                    眠い
                   </span>
                 </label>
               </div>
