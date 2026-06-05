@@ -18,6 +18,8 @@ type WsMessage = {
   room_id: string;
   content: string;
   created_at: string;
+  error_title: string;
+  error_reason: string;
 };
 
 type RoomState = {
@@ -70,6 +72,7 @@ function Room() {
 
   const [isMatchModalOpen, setIsMatchModalOpen] = useState<boolean>(true);
   const [leaveModalOpen, setLeaveModalOpen] = useState<string>("");
+  const [leaveReason, setLeaveReason] = useState<string>("");
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
@@ -95,6 +98,21 @@ function Room() {
           return "相手ユーザーが退出しました";
         });
         return;
+      }
+
+      if(data.type==="error"){
+        setLeaveReason((prev) => {
+          if (prev !== "") {
+            return prev;
+          }
+          return data.error_reason;
+        });
+        setLeaveModalOpen((prev) => {
+          if (prev !== "") {
+            return prev;
+          }
+          return data.error_title;
+        });
       }
 
       const messageType = data.user_id === id ? "sent" : "received";
@@ -330,7 +348,7 @@ function Room() {
               </h2>
 
               <p className="match-modal-text">
-                会話が終了しました。
+                {leaveReason}会話が終了しました。
               </p>
 
               <button
