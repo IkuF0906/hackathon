@@ -44,15 +44,29 @@ func WsMessageHandler(c *gin.Context) {
 			break
 		}
 
-		// NGワードチェック
+		// NGワード
 		if utils.ContainsNGWord(string(msg)) {
-			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error","message":"公序良俗に反するメッセージです"}`))
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error", "error_title": "NGワードを検知", "error_reason":"あなたのメッセージからNGワードを検知したため、"}`))
+
+			errorMsg := []byte(`{"type":"error","error_title": "NGワードを検知", "error_reason":"相手のメッセージからNGワードを検知したため、"}`)
+			roomsMutex.Lock()
+			for _, cl := range rooms[roomID] {
+				cl.Conn.WriteMessage(websocket.TextMessage, errorMsg)
+			}
+			roomsMutex.Unlock()
 			continue
 		}
 
-		// URLチェック
+		// URL
 		if utils.ContainsURL(string(msg)) {
-			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error","message":"URLの送信は禁止されています"}`))
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error","error_title": "URLを検知", "error_reason":"あなたのメッセージからURLを検知したため、"}`))
+
+			errorMsg := []byte(`{"type":"error","error_title": "URLを検知", "error_reason":"相手のメッセージからURLを検知したため、"}`)
+			roomsMutex.Lock()
+			for _, cl := range rooms[roomID] {
+				cl.Conn.WriteMessage(websocket.TextMessage, errorMsg)
+			}
+			roomsMutex.Unlock()
 			continue
 		}
 
