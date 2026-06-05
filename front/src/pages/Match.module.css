@@ -1,0 +1,55 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.appName {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: #888;
+  margin: 0 0 2rem;
+  text-transform: uppercase;
+}
+
+.spinner {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px solid #eee;
+  border-top-color: #000;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 2rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  margin: 0 0 0.75rem;
+}
+
+.description {
+  font-size: 15px;
+  color: #888;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.cancelButton {
+  margin-top: 2rem;
+  padding: 10px 28px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: #888;
+}

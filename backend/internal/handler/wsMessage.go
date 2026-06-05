@@ -44,6 +44,18 @@ func WsMessageHandler(c *gin.Context) {
 			break
 		}
 
+		// NGワードチェック
+		if utils.ContainsNGWord(string(msg)) {
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error","message":"公序良俗に反するメッセージです"}`))
+			continue
+		}
+
+		// URLチェック
+		if utils.ContainsURL(string(msg)) {
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"type":"error","message":"URLの送信は禁止されています"}`))
+			continue
+		}
+
 		message := model.Message{UserName: userName, UserID: userID, RoomID: roomID, Content: string(msg)}
 		jsonMsg, _ := json.Marshal(message)
 
