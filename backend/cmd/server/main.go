@@ -4,8 +4,7 @@ import (
 	"backend/internal/handler"
 	"backend/internal/middleware"
 	"backend/internal/repository"
-	"fmt"
-	"os"
+	"backend/pkg/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -13,13 +12,10 @@ import (
 )
 
 func main() {
-	if err := godotenv.Load("C:/Users/okzks/Documents/dev/hackathon/backend/.env"); err != nil {
-		fmt.Println("envの読み込みエラー:", err)
-	}
-	fmt.Println("DB_HOST:", os.Getenv("DB_HOST"))
-	fmt.Println("DB_PORT:", os.Getenv("DB_PORT"))
+	godotenv.Load("../../config/.env")
 
-	repository.InitDB() //DB接続
+	utils.LoadNGWords("../../pkg/utils/ng_words.json") //NGワード読み込み
+
 	if err := repository.InitDB(); err != nil {
 		panic(err) // エラー内容が表示される
 	}

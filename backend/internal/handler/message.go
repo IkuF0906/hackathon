@@ -6,6 +6,7 @@ import (
 
 	"backend/internal/model"
 	"backend/internal/repository"
+	"backend/pkg/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,6 +46,14 @@ func MessageHandler(c *gin.Context) {
 	}
 	if err := c.ShouldBindJSON(&input); err != nil || input.Content == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "入力値が不正です"})
+		return
+	}
+	if utils.ContainsNGWord(input.Content) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "公序良俗に反するメッセージです"})
+		return
+	}
+	if utils.ContainsURL(input.Content) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "URLの送信は禁止されています"})
 		return
 	}
 

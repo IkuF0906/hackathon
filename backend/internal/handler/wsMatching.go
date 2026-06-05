@@ -96,20 +96,34 @@ func WsMatchingHandler(c *gin.Context) {
 			return
 		}
 
-		var roomID int
-		repository.DB.QueryRow("INSERT INTO rooms DEFAULT VALUES RETURNING id").Scan(&roomID)
-		
+		var roomID string
+		err := repository.DB.QueryRow(
+			"INSERT INTO rooms (expires_at) VALUES ($1) RETURNING id",
+			time.Now().Add(5*time.Minute),
+		).Scan(&roomID)
+
+		if err != nil {
+			conn.WriteMessage(websocket.TextMessage, []byte(`{"status":"error"}`))
+			return
+		}
+
+		repository.DB.Exec(
+			"INSERT INTO room_users (room_id, user_id) VALUES ($1, $2), ($1, $3)",
+			roomID, userID, matched.UserID,
+		)
+
 		var username1 string
 		var username2 string
 		repository.DB.QueryRow("SELECT name FROM users WHERE id=$1", userID).Scan(&username1)
 		repository.DB.QueryRow("SELECT name FROM users WHERE id=$1", matched.UserID).Scan(&username2)
 
 		msg := fmt.Sprintf(
-			`{"status":"matched","room_id":%d,"name_1":"%s","name_2":"%s"}`,
+			`{"status":"matched","room_id":"%s","name_1":"%s","name_2":"%s"}`,
 			roomID,
 			username1,
 			username2,
 		)
+
 		matched.Conn.WriteMessage(websocket.TextMessage, []byte(msg))
 		conn.WriteMessage(websocket.TextMessage, []byte(msg))
 
