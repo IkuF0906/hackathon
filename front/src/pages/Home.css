@@ -429,10 +429,6 @@ h1 {
   .matching-card {
     min-height: 460px;
   }
-
-  .profile-summary {
-    min-height: 300px;
-  }
 }
 
 @media (max-width: 640px) {

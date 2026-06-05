@@ -123,7 +123,13 @@ function Matching() {
       if(data.status === "waiting"){
         setStatus("マッチング待機中")
       }else if(data.status == "matched"){
-        navigate(`/room/${data.room_id}`)
+        console.log(data);
+        navigate(`/room/${data.room_id}`, {
+          state: {
+            name_1: data.name_1,
+            name_2: data.name_2,
+          },
+        });
       }
     }
 
